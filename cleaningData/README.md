@@ -1,21 +1,25 @@
-#CODEBOOK
+##CODEBOOK
 The TidyDataSet contains a **total of 68 variables**:
-1. subject: refers to the individual who generated all the data metrics by using the Samsung phone
-2. activity: 6 activities subjects were asked to perform in order to capture data
-3. rest of the variables: are the average values for a set of signals
 
-#PROCEDURE
-##1.
+1. **subject**: refers to the individual who generated all the data metrics by using the Samsung phone
+2. **activity**: 6 activities subjects were asked to perform in order to capture data
+3. **rest of the variables**: are the average values for a set of signals
+
+------------------------------
+##PROCEDURE
+### 1.
 from the instructions given in the course website, the starting point was to load required data which consists of: 
--a. test and train set (subject, activity reference and signal)
--b. features.txt file
--c. activity labels
-Note: in this stage, the corresponding R script that was written assumes that the folder that contains all the information was unzipped and stored in the working directory (with no changes within the actual folder)
 
-## 2.
+- a. test and train set (subject, activity reference and signal)
+- b. features.txt file
+- c. activity labels
+
+*Note: in this stage, the corresponding R script that was written assumes that the folder that contains all the information was unzipped and stored in the working directory (with no changes within the actual folder)*
+
+### 2.
 Once all the necessary data was loaded into de workspace, the next step was to combine the data frames, first by same type (e.g. test subject data with train subject data) and then binding them by column. The resulting data frame was named "newDataSet"
 
-## 3.
+### 3.
 subsequently, heading names were inserted to the new data set (subject, activity, rest of variables)
 
 ### 4.
