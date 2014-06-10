@@ -1,0 +1,1 @@
+This is a folder dedicated to Coursera's Reproducible Research subject
