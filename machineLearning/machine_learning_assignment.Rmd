@@ -1,0 +1,102 @@
+---
+title: "Machine Learning Assignment"
+output: html_document
+---
+# Introduction
+The objective of this coursework is the develop a model which is able to predict the class of activity the subjects were conducting based on a series of chosen variables
+
+The method chosen for this endevour was random forests
+
+# Data Processing
+The first step is to load the required packages and the datasets:
+```{r cache=TRUE}
+library(caret)
+pmlTrain <- read.csv("pml-training.csv", na.strings=c(NA,""))
+pmlTest <- read.csv("pml-testing.csv")
+```
+Some trial and error was conducted when loading the data for the first time. The insight obtained basically showed that there were considerable number of variables whith many NAs and whitespaces. In order to simplify their removal process, the `na.strings` parameter specifies that both events will be treated as NAs. Next the columns with NAs were removed using the following command:
+```{r cache=TRUE}
+pmlTrain <- pmlTrain[, which(as.numeric(colSums(is.na(pmlTrain)))==0)]
+dim(pmlTrain)
+```
+
+Some exploration of the first 6 variables suggests that these are not relevant to the study:
+```{r cache=TRUE}
+str(pmlTrain[1:6])
+```
+
+Hence we can remove them:
+```{r cache=TRUE}
+pmlTrain <- pmlTrain[,-c(1:5)]
+dim(pmlTrain)
+```
+
+The next data refining step is finding which covariates have high correlation and thus, can be excluded from the analysis without having a noticeable impact of the model. To achieve this, we use the `findCorrelation()` function which, in turn, requires a correlation matrix (which excludes factor variables):
+```{r cache=TRUE}
+corMatrix <- as.matrix(cor(pmlTrain[,2:54]))
+levelplot(corMatrix)
+```
+
+The levelplot graph simply depicts the variables which have high correlation. The `findCorrelation()` function will indicate us which of those columns could be removed:
+
+```{r cache=TRUE}
+corCols <- findCorrelation(corMatrix)
+rmCols <- colnames(corMatrix)[corCols]
+pmlTrain <- pmlTrain[ ,(colnames(pmlTrain) %in% rmCols == FALSE)]
+dim(pmlTrain)
+```
+we can see that seven variables were removed.
+
+The last pre-processing step is to find which covariates have little variability. We do this with the help of `nearZeroVar()` function:
+
+```{r cache=TRUE}
+pmlTrain <- pmlTrain[,-(nearZeroVar(pmlTrain))]
+dim(pmlTrain)
+```
+In this case we can observe that only one variable had little variance and hence, it was dropped.
+
+# Data Analysis
+moving on to the model-creation section, we now proceed to split the pml_training data which by this point has been reduced from 160 variables to 47.
+
+```{r echo=FALSE}
+library(caret)
+```
+
+```{r split to training and testing sets, cache=TRUE}
+intrain <- createDataPartition(y=pmlTrain$classe,
+                               p=0.6, list=FALSE) 
+training <- pmlTrain[intrain,]
+testing <- pmlTrain[-intrain,]
+dim(training);dim(testing)
+```
+
+Once the data has been split, we proceed to actually training the model using the `train()` function specifying we are interested in using the `'rf'` method and under the `trControl`, the `'cv'` method.
+
+```{r train the model with training data, cache=TRUE}
+modFit <- train(classe ~ ., method="rf", data=training,
+                trControl= trainControl(method = "cv"))
+```
+
+
+
+# Results
+
+The final step is to cross-validate our model. That is, to see how well the trained model performs with our testing data set. To achieve this, we use the `predict()` function specifying the new dataset. afterwards, we use the `confusionMatrix` to evaluate the **out of sample error**:
+
+```{r cross-validate model with testing data (still part of pmlTraining), cache=TRUE}
+xValidate <- predict(modFit,newdata=testing)
+confusionMatrix(xValidate,testing$classe)
+```
+
+The confusion matrix suggests that the model accuracy is very high (99.78%), hence the expected out of sample error rate is around 0.22%.
+
+This model would then be used to predict the classe variable of the pml_Test dataset which comprises 20 observations:
+```{r test the model with the actual test data}
+pmlTest2 <- pmlTest[,(colnames(pmlTest) %in% colnames(training) == TRUE)]
+predictions <- predict(modFit,newdata=pmlTest2)
+predictions <- as.character(predictions)
+predictions
+```
+
+
+
