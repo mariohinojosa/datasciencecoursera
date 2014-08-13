@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Developing Data Products</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Developing Data Products">
+  <meta name="author" content="Mario">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Developing Data Products</h1>
+    <h2>Baby Names App Pitch</h2>
+    <p>Mario<br/>Data Scientist in the Making</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>What is this app about?</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The &quot;Baby Names&quot; App is a handy little tool that allows you to visualize the most popular
+baby names in the United States in the last decade. </p>
+
+<p><img src="http://goo.gl/SBGcJj" alt="&#39;babyImage&#39;"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Who should use it?</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The Mission of this app is to help future parents make a better and more informed decision
+related to that crucial aspect which is the naming of their children.</p>
+
+<p>There are basically two kinds of future parents:</p>
+
+<ol>
+<li>Those who like to be part of the general convention (i.e. fit in):
+
+<ul>
+<li>For them, this app allows them to choose a popular name.</li>
+</ul></li>
+<li>Those who dislike being &quot;part of the bunch&quot; and thus, enjoy differentiating themselves:
+
+<ul>
+<li>For this segment, this app helps them prevent naming their kids with a conventional name.</li>
+</ul></li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>How does it look?</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The app is pretty straightforward. You simply select the year, gender and rank. The output is
+a graph that looks like this:</p>
+
+<p><img src="assets/fig/unnamed-chunk-1.png" alt="plot of chunk unnamed-chunk-1"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>What does it look like under the hood?</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The graph in the previous slide was obtained from evaluating an embedded R code which was set to &quot;echo=FALSE&quot;. Thus, the actual code is not displayed.
+If you are interested in seeing the code (and to avoid confusion for my evaluator), you can see it below:</p>
+
+<pre><code>library(ggplot2)
+bNames  &lt;- read.csv(&quot;baby_names.csv&quot;)
+mySub &lt;- subset(bNames,Gender==&quot;M&quot; &amp; Year==2012 , select=c(Name,Frequency))
+sortIndex &lt;- order(-mySub$Frequency)
+topNames &lt;- mySub[sortIndex[1:10],]
+topNames$Name &lt;- as.character(topNames$Name)
+title &lt;- paste(&quot;Top 10&quot;,&quot;Male&quot;,&quot;Names in&quot;,&quot;2012&quot;)
+ggplot(topNames, aes(x= reorder(Name, -Frequency),Frequency)) +
+    geom_bar(stat=&quot;identity&quot;, colour=&quot;darkblue&quot;, fill=&quot;blue&quot;) +
+    xlab(&quot;Baby name&quot;) +
+    ylab(&quot;Frequency&quot;) +
+    ggtitle(title) +
+    theme(plot.title = element_text(lineheight=0.8, face=&quot;bold&quot;))
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='What is this app about?'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Who should use it?'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='How does it look?'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='What does it look like under the hood?'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
